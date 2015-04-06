@@ -7,9 +7,9 @@
         Title="Mathias' fitness application" Height="327.5" Width="354.5">
     <Grid Margin="0,0,0,84">
         <Button x:Name="runningButton" Content="Running" FontSize="25" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Width="139" Height="82" Click="runningButton_Click"/>
-        <Button x:Name="runningButton_Copy" Content="Running" FontSize="25" HorizontalAlignment="Left" Margin="172,32,0,0" VerticalAlignment="Top" Width="139" Height="82"/>
-        <Button x:Name="runningButton_Copy1" Content="Running" FontSize="25" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Width="139" Height="82"/>
-        <Button x:Name="runningButton_Copy2" Content="Running" FontSize="25" HorizontalAlignment="Left" Margin="172,119,0,0" VerticalAlignment="Top" Width="139" Height="82"/>
+        <Button x:Name="runningButton_Copy" Content="Rg" FontSize="25" HorizontalAlignment="Left" Margin="172,32,0,0" VerticalAlignment="Top" Width="139" Height="82"/>
+        <Button x:Name="runningButton_Copy1" Content="Rg" FontSize="25" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Width="139" Height="82"/>
+        <Button x:Name="runningButton_Copy2" Content="Rg" FontSize="25" HorizontalAlignment="Left" Margin="172,119,0,0" VerticalAlignment="Top" Width="139" Height="82"/>
 
 
 

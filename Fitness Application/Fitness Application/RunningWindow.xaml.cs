@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using System.Data.SQLite;
 namespace Fitness_Application
 {
     /// <summary>
@@ -22,10 +22,10 @@ namespace Fitness_Application
         Boolean isVisible = false;
         public RunningWindow()
         {
-            
+
             InitializeComponent();
             hideControls();
-            
+
         }
 
         private void enterNewRunButton_Click(object sender, RoutedEventArgs e)
@@ -71,5 +71,40 @@ namespace Fitness_Application
             window.Show();
             this.Close();
         }
+
+
+        private  void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // //Data_connection dbobject = new Data_connection();
+            // SQLiteConnection sqlConnection;
+            // SQLiteCommand sqlCommand;
+            string createTableQuery = @"CREATE TABLE IF NOT EXISTS [RunningTable](
+                            [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Time] NVARCHAR(20) NULL, [Distance] REAL NULL)";
+
+            SQLiteConnection.CreateFile("FitnessApplication.sqlite");
+            SQLiteConnection connection = new SQLiteConnection("data source=FitnessApplication.sqlite");
+
+            SQLiteCommand command = new SQLiteCommand(connection);
+            connection.Open();
+            command.CommandText = createTableQuery;
+            command.ExecuteNonQuery();
+            command.CommandText = "INSERT INTO RunningTable (Time, Distance) Values ('22:14', 5.22)";
+            command.ExecuteNonQuery();
+            command.CommandText = "Select * FROM RunningTable";
+            using (SQLiteDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Console.WriteLine(reader["Time"] + ", distance: " + reader["Distance"]);
+                }
+            }
+            connection.Close();
+
+        }
+
+
+
     }
 }
+
