@@ -80,31 +80,6 @@ namespace Fitness_Application
 
         private  void Button_Click(object sender, RoutedEventArgs e)
         {
-//            // //Data_connection dbobject = new Data_connection();
-//            // SQLiteConnection sqlConnection;
-//            // SQLiteCommand sqlCommand;
-//            string createTableQuery = @"CREATE TABLE IF NOT EXISTS [RunningTable](
-//                            [ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-//                            [Time] NVARCHAR(20) NULL, [Distance] REAL NULL)";
-
-//            //SQLiteConnection.CreateFile("FitnessApplication.sqlite");
-//            SQLiteConnection connection = new SQLiteConnection("data source=FitnessApplication.sqlite");
-
-//            SQLiteCommand command = new SQLiteCommand(connection);
-//            connection.Open();
-//            //command.CommandText = createTableQuery;
-//            //command.ExecuteNonQuery();
-//            //command.CommandText = "INSERT INTO RunningTable (Time, Distance) Values ('22:14', 5.22)";
-//            //command.ExecuteNonQuery();
-//            command.CommandText = "Select * FROM RunningTable";
-//            using (SQLiteDataReader reader = command.ExecuteReader())
-//            {
-//                while (reader.Read())
-//                {
-//                    Console.WriteLine(reader["Time"] + ", distance: " + reader["Distance"]);
-//                }
-//            }
-//            connection.Close();
 
         }
 
@@ -115,9 +90,22 @@ namespace Fitness_Application
             if (isValid())
             {
                 run.time =  TransformTime(timeTextbox.Text);
+                
                 run.distance = Convert.ToDouble(distanceTextbox.Text);
                 //TODO: IMPLEMENT THE DATE THAT THE RUN WAS COMPLETED WITH A CALENDAR
-            }
+                try
+                {
+                    Database.InsertNewRun(run);
+                    errorLabel.Content = "Run added!";
+                    errorLabel.Foreground= new SolidColorBrush(Colors.Green);
+                    errorLabel.Visibility = Visibility.Visible;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.StackTrace, ex.Message);
+                }
+               
+            } 
         }
         private Time TransformTime(string time)
         {
@@ -136,36 +124,71 @@ namespace Fitness_Application
                 return t;
             }
         }
+
+        private void setError()
+        {
+            errorLabel.Visibility = Visibility.Visible;
+            errorLabel.Foreground = new SolidColorBrush(Colors.Red);
+        }
         private Boolean isValid()
         {
             if (distanceTextbox.Text == ""){
                errorLabel.Content = "Gelieve een afstand in te vullen!";
-                errorLabel.Visibility = Visibility.Visible;
+               setError();
                 return false;
             }
-            if (distanceTextbox.Text.Contains(',') || distanceTextbox.Text.Contains('.'))
+            if (distanceTextbox.Text.Contains('.') )
             {
-                distanceTextbox.Text.Replace('.', ':');
-                distanceTextbox.Text.Replace(',', ':');
+                MessageBox.Show("contains a dot");
+                string distance = distanceTextbox.Text;
+                distance.Replace('.', ',');
+
+                distanceTextbox.Text = distance;
             }
             if (timeTextbox.Text.Length > 8){
                 errorLabel.Content = "Gelieve een geldige tijd in te vullen!";
-                 errorLabel.Visibility = Visibility.Visible;
+                setError();               
                 return false;
             }
+            if (timeTextbox.Text.Any(x => !char.IsLetter(x)))
+            {
+                if (!timeTextbox.Text.Contains(':'))
+                {
+                    errorLabel.Content = "Gelieve enkel cijfers en ':' in te geven bij de tijd.";
+                    setError();
+                    return false;
+                }
+                //errorLabel.Content = "Gelieve enkel cijfers en ':' in te geven bij de tijd.";
+                //setError();
+                //return false;
+                
+            }
+            if (!distanceTextbox.Text.Any(x => char.IsLetter(x)))
+            {
+                
+                errorLabel.Content = "Gelieve enkel cijfers en eventueel een komma in te geven bij de distance.";
+                setError();
+                return false;
+            }
+            //if (Regex.Matches(timeTextbox.Text, @"a-zA-Z").Count > 0 || Regex.Matches(distanceTextbox.Text, @"a-zA-Z").Count > 0)
+            //{
+            //    errorLabel.Content = "Gelieve enkel cijfers en ':' in  te geven.";
+            //    setError();
+            //    return false;
+            //}
             if (!timeTextbox.Text.Contains(':')){
                 errorLabel.Content = "Gelieve de tijd te scheiden met een dubbele punt (:)";
-                errorLabel.Visibility = Visibility.Visible;
+                setError();
                 return false;
             }
-            if (Regex.Matches(timeTextbox.Text, @"a-zA-Z").Count > 0)
-            {
-                errorLabel.Content = "Gelieve enkel cijfers en ':' in  te geven in de tijd.";
-                errorLabel.Visibility = Visibility.Visible;
-                return false;
-            }
+            
 
             return true;
+
+        }
+
+        private void showStatsButton_Click(object sender, RoutedEventArgs e)
+        {
 
         }
 
